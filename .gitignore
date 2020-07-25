@@ -46,3 +46,5 @@ tags
 
 .idea
 target
+*.iml
+gradle
