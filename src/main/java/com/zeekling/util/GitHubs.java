@@ -50,6 +50,7 @@ public final class GitHubs {
             final HttpResponse res = HttpRequest.get("https://hacpai.com/github/repos?id=" + githubUserId).trustAllCerts(true).
                     connectionTimeout(3000).timeout(7000).header("User-Agent", GitHubConstants.USER_AGENT).send();
             if (200 != res.statusCode()) {
+                LOGGER.error("error code:" + res.statusCode());
                 return null;
             }
             res.charset("UTF-8");
@@ -176,12 +177,13 @@ public final class GitHubs {
             final HttpResponse response = HttpRequest.get("https://api.github.com/user").header("Authorization", "token " + pat).
                     connectionTimeout(7000).timeout(30000).header("User-Agent", GitHubConstants.USER_AGENT).send();
             if (200 != response.statusCode()) {
+                LOGGER.error("error code:" + response.statusCode());
                 return null;
             }
             response.charset("UTF-8");
             return new JSONObject(response.bodyText());
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Gets GitHub user info failed: " + e.getMessage());
+            LOGGER.log(Level.ERROR, "Gets GitHub user info failed: " + e);
             return null;
         }
     }

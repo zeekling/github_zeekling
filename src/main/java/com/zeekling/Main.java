@@ -2,6 +2,8 @@ package com.zeekling;
 
 import com.zeekling.blog.BlogUpdateService;
 import com.zeekling.blog.BlogUpdateServiceImpl;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * @author zeekling [lingzhaohui@zeekling.cn]
@@ -11,10 +13,17 @@ import com.zeekling.blog.BlogUpdateServiceImpl;
  */
 public class Main {
 
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
+
     public static void main(String[] args) {
-        BlogUpdateService updateService = new BlogUpdateServiceImpl("/home/zeek/project/github_zeekling/src/main/resources/blog.properties");
+        String configPath = System.getProperty("configPath");
+        BlogUpdateService updateService = new BlogUpdateServiceImpl(configPath);
         int res  = updateService.update();
-        System.out.println(res);
+        if (res == 0){
+            LOGGER.info("update github success!");
+            return;
+        }
+        LOGGER.error("update github failed!");
     }
 
 }
