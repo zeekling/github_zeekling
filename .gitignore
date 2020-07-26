@@ -48,3 +48,4 @@ tags
 target
 *.iml
 gradle
+logs

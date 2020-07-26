@@ -6,9 +6,9 @@ package com.zeekling.blog;
  * @apiNote
  * @since 2020-07-25
  */
-public class BlogUpdate {
+public interface BlogUpdateService {
 
 
-
+    int update();
 
 }
