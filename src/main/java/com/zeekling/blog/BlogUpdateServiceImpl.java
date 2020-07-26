@@ -51,7 +51,8 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
         }
         LOGGER.info("login success");
         final String loginName = gitHubUser.optString("login");
-        boolean ok = GitHubs.createOrUpdateGitHubRepo(blogConfigure.getPat(), loginName, blogConfigure.getRepoName(), "跟新主页", blogConfigure.getHome());
+        boolean ok = GitHubs.createOrUpdateGitHubRepo(blogConfigure.getPat(), loginName, blogConfigure.getRepoName(),
+                blogConfigure.getClientSubtitle(), blogConfigure.getHome());
         if (!ok) {
             LOGGER.error("get " + blogConfigure.getRepoName() + " failed");
             return -1;
