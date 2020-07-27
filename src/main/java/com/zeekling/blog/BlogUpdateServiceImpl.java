@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +31,8 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
     private static final Logger LOGGER = LogManager.getLogger(BlogUpdateServiceImpl.class);
 
     private BlogConfigure blogConfigure = null;
+
+    private static String HTML_REGEX="<[^>]+>";
 
     public BlogUpdateServiceImpl(String confPath) {
         // init blogConfigure
@@ -70,14 +74,24 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
         try {
             List<SyndEntry> entries = FeedXmlUtil.parseXml(blogConfigure.getRss());
             for (SyndEntry syndEntry: entries){
-                bodyBuilder.append("\n* [").append(syndEntry.getTitle()).append("](").append(syndEntry.getLink()).append(")");
+                String des = syndEntry.getDescription().getValue();
+                des = des.replaceAll("\n", "\n    > ");
+                bodyBuilder.append("\n* \uD83D\uDCDD [").append(syndEntry.getTitle()).append("](").append(syndEntry.getLink())
+                        .append(") \n    > ").append(des);
             }
         } catch (FeedException | MalformedURLException e) {
             e.printStackTrace();
         }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentDate = format.format(new Date());
         bodyBuilder.append("\n\n");
 
-        String ret = "<p align=\"center\"><img alt=\"${title}\" src=\"${favicon}\"></p><h2 align=\"center\">\n" +
+        String ret = "### Hey \uD83D\uDC4B, I'm [Zeek Ling](https://www/zeekling.cn)! \n" +
+                "![Github Stats](https://github-readme-stats.vercel.app/api?username=zeekling&show_icons=true) \n" +
+                "### 我在[小令童鞋](https://www/zeekling.cn)的近期动态\n" +
+                "\n" +
+                "⭐️ Star [个人主页](https://github.com/zeekling/zeekling) 后会自动更新，最近更新时间：`" + currentDate + "`\n" +
+                "\n<p align=\"center\"><img alt=\"${title}\" src=\"${favicon}\"></p><h2 align=\"center\">" +
                 "${title}\n" +
                 "</h2>\n" +
                 "\n" +
@@ -89,9 +103,7 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
                 "</p>\n" +
                 "\n" +
                 "${body}\n\n" +
-                "---\n" +
-                "\n" +
-                "本仓库通过 [github_zeekling](https://git.zeekling.cn/zeekling/github_zeekling) 自动进行同步更新 ❤️ ";
+                "\n" ;
         ret = ret.replace("${title}", blogConfigure.getClientTitle()).
                 replace("${subtitle}", blogConfigure.getClientSubtitle()).
                 replace("${favicon}", blogConfigure.getFavicon()).

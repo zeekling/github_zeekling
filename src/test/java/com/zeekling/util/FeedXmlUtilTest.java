@@ -23,6 +23,9 @@ public class FeedXmlUtilTest {
         try {
             url = new URL("https://www.zeekling.cn/rss.xml");
             List<SyndEntry> entries = FeedXmlUtil.parseXml(url);
+            for (SyndEntry syndEntry: entries){
+                System.out.println(syndEntry.getTitle() + "\n\t" + syndEntry.getDescription().getValue());
+            }
         } catch (MalformedURLException | FeedException e) {
             e.printStackTrace();
         }
