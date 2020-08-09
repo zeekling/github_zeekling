@@ -86,7 +86,7 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
         String currentDate = format.format(new Date());
         bodyBuilder.append("\n\n");
 
-        String ret = "### Hey \uD83D\uDC4B, I'm [Zeek Ling](https://www/zeekling.cn)! \n" +
+        String ret = "### Hey \uD83D\uDC4B, I'm [Zeek Ling](https://www.zeekling.cn)! \n" +
                 "![Github Stats](https://github-readme-stats.vercel.app/api?username=zeekling&show_icons=true) \n" +
                 "### 我在[小令童鞋](https://www.zeekling.cn)的近期动态\n" +
                 "\n" +
