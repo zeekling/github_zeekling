@@ -16,9 +16,7 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author zeekling [lingzhaohui@zeekling.cn]
@@ -62,6 +60,12 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
             return -1;
         }
         final String readme = genSoloBlogReadme(loginName + "/" + blogConfigure.getRepoName());
+        LOGGER.log(Level.INFO, "begin get README.md");
+        final String oldReadname = GitHubs.getGitHubFile("README.md", blogConfigure.getRepoName(), blogConfigure.getPat(), "master");
+        if (oldReadname != null && oldReadname.equals(readme)) {
+            LOGGER.log(Level.INFO, "do not need to update file:README.md");
+            return 0;
+        }
         ok = GitHubs.updateFile(blogConfigure.getPat(), loginName, blogConfigure.getRepoName(), "README.md", readme.getBytes(StandardCharsets.UTF_8));
         if (ok) {
             LOGGER.log(Level.INFO, "Exported public articles to your repo [" + blogConfigure.getRepoName() + "]");
@@ -82,15 +86,13 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
         } catch (FeedException | MalformedURLException e) {
             e.printStackTrace();
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentDate = format.format(new Date());
         bodyBuilder.append("\n\n");
 
-        String ret = "### Hey \uD83D\uDC4B, I'm [Zeek Ling](https://www.zeekling.cn)! \n" +
+        String ret = "### Hey \uD83D\uDC4B, I'm [ZEEKLING](https://www.zeekling.cn)! \n" +
                 "![Github Stats](https://github-readme-stats.vercel.app/api?username=zeekling&show_icons=true) \n" +
                 "### 我在[小令童鞋](https://www.zeekling.cn)的近期动态\n" +
                 "\n" +
-                "⭐️ Star [个人主页](https://github.com/zeekling/zeekling) 后会自动更新，最近更新时间：`" + currentDate + "`\n" +
+                "⭐️ Star [个人主页](https://github.com/zeekling/zeekling) 后会自动更新" +
                 "\n<p align=\"center\"><img alt=\"${title}\" src=\"${favicon}\"></p><h2 align=\"center\">" +
                 "${title}\n" +
                 "</h2>\n" +

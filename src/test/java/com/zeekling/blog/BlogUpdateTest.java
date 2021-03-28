@@ -14,7 +14,7 @@ public class BlogUpdateTest {
 
     @Test
     public void updateGitHub(){
-        String pat = "068783457fa6e084aad1342ed2730f33a0255b97";
+        String pat = "c9e0b35a43858edbb75bf3bcb4731b8227a82687";
         final JSONObject gitHubUser = GitHubs.getGitHubUser(pat);
         if (null == gitHubUser) {
             return;
