@@ -5,6 +5,7 @@ import com.rometools.rome.io.FeedException;
 import com.zeekling.conf.BlogConfigure;
 import com.zeekling.util.ConfigureUtil;
 import com.zeekling.util.FeedXmlUtil;
+import com.zeekling.util.FileUtils;
 import com.zeekling.util.GitHubs;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -14,8 +15,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,8 +28,6 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
     private static final Logger LOGGER = LogManager.getLogger(BlogUpdateServiceImpl.class);
 
     private BlogConfigure blogConfigure = null;
-
-    private static String HTML_REGEX="<[^>]+>";
 
     public BlogUpdateServiceImpl(String confPath) {
         // init blogConfigure
@@ -61,15 +58,16 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
         }
         final String readme = genSoloBlogReadme(loginName + "/" + blogConfigure.getRepoName());
         LOGGER.log(Level.INFO, "begin get README.md");
-        final String oldReadname = GitHubs.getGitHubFile("README.md", blogConfigure.getRepoName(), blogConfigure.getPat(), "master");
-        if (oldReadname != null && oldReadname.equals(readme)) {
-            LOGGER.log(Level.INFO, "do not need to update file:README.md");
-            return 0;
+        final String oldReadme = FileUtils.readFile(blogConfigure.getGithubTmp() + "/README.md");
+        if (oldReadme != null && oldReadme.equals(readme)) {
+        	LOGGER.info("not need update readme.");
+        	return 0;
         }
         ok = GitHubs.updateFile(blogConfigure.getPat(), loginName, blogConfigure.getRepoName(), "README.md", readme.getBytes(StandardCharsets.UTF_8));
         if (ok) {
             LOGGER.log(Level.INFO, "Exported public articles to your repo [" + blogConfigure.getRepoName() + "]");
         }
+        FileUtils.saveDataToFile(blogConfigure.getGithubTmp() + "/README.md", readme);
         return 0;
     }
 

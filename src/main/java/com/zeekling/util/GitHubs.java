@@ -66,28 +66,6 @@ public final class GitHubs {
         }
     }
 
-    public static String getGitHubFile(final String filePath, final String fullRepoName, final String pat, final String branchName) {
-        try {
-            final HttpResponse res = HttpRequest.get("https://raw.githubusercontent.com/" + fullRepoName  +  "/" + branchName +  "/" + filePath)
-                                .header("Authorization", "token " + pat)
-                                .connectionTimeout(7000)
-                                .timeout(60000)
-                                .header("User-Agent", GitHubConstants.USER_AGENT)
-                                .send();
-            int code = res.statusCode();
-            res.charset("UTF-8");
-            String responseBody = res.bodyText();
-            if (200 != code) {
-                LOGGER.log(Level.ERROR, "Get git tree of file [" + filePath + "] failed: " + responseBody);
-                return null;
-            }
-            return responseBody;
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Gets GitHub file failed", e);
-        }
-        return null;
-    }
-
     /**
      * Updates a file by the specified personal access token, GitHub login name, repo name, file path and file content.
      *

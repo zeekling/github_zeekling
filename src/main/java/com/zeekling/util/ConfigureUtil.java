@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Properties;
 
@@ -28,8 +27,8 @@ public final class ConfigureUtil {
         return properties;
     }
 
-    @SuppressWarnings("ReflectionForUnavailableAnnotation")
-    public static <T> T getNewInstants(String filePath, Class<T> tClass)
+    @SuppressWarnings("deprecation")
+	public static <T> T getNewInstants(String filePath, Class<T> tClass)
             throws IllegalAccessException, InstantiationException, IOException {
         T t = tClass.newInstance();
         Properties properties = readProperties(filePath);

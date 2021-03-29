@@ -14,19 +14,14 @@ public class BlogUpdateTest {
 
     @Test
     public void updateGitHub(){
-        String pat = "c9e0b35a43858edbb75bf3bcb4731b8227a82687";
-        final JSONObject gitHubUser = GitHubs.getGitHubUser(pat);
-        if (null == gitHubUser) {
+        String configPath = "/home/zeek/project/github_zeekling/src/main/resources/blog.properties";
+        BlogUpdateService updateService = new BlogUpdateServiceImpl(configPath);
+        int res  = updateService.update();
+        if (res == 0){
+            System.out.println("update github success!");
             return;
         }
-
-        final String loginName = gitHubUser.optString("login");
-        final String repoName = "zeekling";
-        boolean ok = GitHubs.createOrUpdateGitHubRepo(pat, loginName, repoName, "跟新主页", "https://www.zeekling.cn/");
-        if (!ok) {
-            return;
-        }
-//        final String readme = genSoloBlogReadme(clientTitle, clientSubtitle, preference.optString(Option.ID_C_FAVICON_URL), loginName + "/" + repoName);
+        System.out.println("update github failed!");
     }
 
 }

@@ -28,8 +28,19 @@ public final class BlogConfigure {
 
     @Value(name = "blog.rss")
     private String rss;
+    
+    @Value(name = "github.tmp")
+    private String githubTmp;
 
-    public String getClientTitle() {
+    public String getGithubTmp() {
+		return githubTmp;
+	}
+
+	public void setGithubTmp(String githubTmp) {
+		this.githubTmp = githubTmp;
+	}
+
+	public String getClientTitle() {
         return clientTitle;
     }
 
@@ -84,4 +95,6 @@ public final class BlogConfigure {
     public void setRss(String rss) {
         this.rss = rss;
     }
+    
+    
 }
