@@ -47,19 +47,14 @@ public final class GitHubs {
      */
     public static JSONArray getGitHubRepos(final String githubUserId) {
         try {
-            final HttpResponse res = HttpRequest.get("https://hacpai.com/github/repos?id=" + githubUserId).trustAllCerts(true).
-                    connectionTimeout(3000).timeout(7000).header("User-Agent", GitHubConstants.USER_AGENT).send();
+            final HttpResponse res = HttpRequest.get("https://api.github.com/users/" + githubUserId + "/repos").
+                connectionTimeout(20000).timeout(60000).header("User-Agent", GitHubConstants.USER_AGENT).send();
             if (200 != res.statusCode()) {
                 LOGGER.error("error code:" + res.statusCode());
                 return null;
             }
             res.charset("UTF-8");
-            final JSONObject result = new JSONObject(res.bodyText());
-            if (0 != result.optInt(GitHubConstants.CODE)) {
-                return null;
-            }
-            final JSONObject data = result.optJSONObject(GitHubConstants.DATA);
-            return data.optJSONArray("githubrepos");
+            return new JSONArray(res.bodyText());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Gets GitHub repos failed", e);
             return null;

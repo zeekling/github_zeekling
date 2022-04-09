@@ -7,15 +7,22 @@ import com.zeekling.util.ConfigureUtil;
 import com.zeekling.util.FeedXmlUtil;
 import com.zeekling.util.FileUtils;
 import com.zeekling.util.GitHubs;
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @author zeekling [lingzhaohui@zeekling.cn]
@@ -110,6 +117,21 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
                 replace("${repoFullName}", repoFullName).
                 replace("${body}", bodyBuilder.toString());
         return ret;
+    }
+
+    @Override
+    public JSONArray getGitHubRepos() {
+        if (blogConfigure == null) {
+            return null;
+        }
+        final JSONObject gitHubUser = GitHubs.getGitHubUser(blogConfigure.getPat());
+        if (null == gitHubUser) {
+            LOGGER.error("login failed");
+            return null;
+        }
+        LOGGER.info("login success");
+        final String myGitHubID = gitHubUser.optString("login");
+        return GitHubs.getGitHubRepos(myGitHubID);
     }
 
 }
