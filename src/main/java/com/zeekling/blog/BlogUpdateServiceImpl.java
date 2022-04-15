@@ -79,43 +79,45 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
     }
 
     private String genSoloBlogReadme(final String repoFullName) {
-        final StringBuilder bodyBuilder = new StringBuilder("### 最新\n");
+        final StringBuilder bodyBuilder = new StringBuilder("### 最新文章\n");
         try {
             List<SyndEntry> entries = FeedXmlUtil.parseXml(blogConfigure.getRss());
             for (SyndEntry syndEntry: entries){
-                String des = syndEntry.getDescription().getValue();
-                des = des.replaceAll("\n", "\n    > ");
-                bodyBuilder.append("\n* \uD83D\uDCDD [").append(syndEntry.getTitle()).append("](").append(syndEntry.getLink())
-                        .append(") \n    > ").append(des);
+                bodyBuilder.append("\n* \uD83D\uDCDD [")
+                    .append(syndEntry.getTitle())
+                    .append("](")
+                    .append(syndEntry.getLink())
+                    .append(") \n ");
             }
         } catch (FeedException | MalformedURLException e) {
             e.printStackTrace();
         }
         bodyBuilder.append("\n\n");
 
-        String ret = "### Hey \uD83D\uDC4B, I'm [ZEEKLING](https://www.zeekling.cn)! \n" +
-                "![Github Stats](https://github-readme-stats.vercel.app/api?username=zeekling&show_icons=true) \n" +
-                "### 我在[小令童鞋](https://www.zeekling.cn)的近期动态\n" +
-                "\n" +
-                "⭐️ Star [个人主页](https://github.com/zeekling/zeekling) 后会自动更新" +
-                "\n<p align=\"center\"><img alt=\"${title}\" src=\"${favicon}\"></p><h2 align=\"center\">" +
-                "${title}\n" +
-                "</h2>\n" +
-                "\n" +
-                "<h4 align=\"center\">${subtitle}</h4>\n" +
-                "<p align=\"center\">" +
-                "<a title=\"${title}\" target=\"_blank\" href=\"https://github.com/${repoFullName}\"><img src=\"https://img.shields.io/github/last-commit/${repoFullName}.svg?style=flat-square&color=FF9900\"></a>\n" +
-                "<a title=\"GitHub repo size in bytes\" target=\"_blank\" href=\"https://github.com/${repoFullName}\"><img src=\"https://img.shields.io/github/repo-size/${repoFullName}.svg?style=flat-square\"></a>\n" +
-                "<a title=\"Hits\" target=\"_blank\" href=\"https://github.com/zeekling/hits\"><img src=\"https://hits.b3log.org/${repoFullName}.svg\"></a>" +
-                "</p>\n" +
-                "\n" +
-                "${body}\n\n" +
-                "\n" ;
+        String ret = "### Hey \uD83D\uDC4B, I'm [${title}](${home})! \n" +
+            "\n![Github Stats](https://github-readme-stats.vercel.app/api?username=${username}&show_icons=true) \n\n" +
+            "### 我在博客[${title}](${home})的近期动态\n" +
+            "⭐️ Star [个人主页](https://github.com/${username}) 后会自动更新" +
+            "\n\n<p align=\"center\"><img alt=\"${title}\" src=\"${favicon}\"></p>" +
+            "<h2 align=\"center\"> ${title} </h2>\n" +
+            "\n" +
+            "<h4 align=\"center\">${subtitle}</h4>\n" +
+            "<p align=\"center\">" +
+            "<a title=\"${title}\" target=\"_blank\" href=\"https://github.com/${repoFullName}\"><img src=\"https://img.shields.io/github/last-commit/${repoFullName}.svg?style=flat-square&color=FF9900\"></a>\n" +
+            "<a title=\"GitHub repo size in bytes\" target=\"_blank\" href=\"https://github.com/${repoFullName}\"><img src=\"https://img.shields.io/github/repo-size/${repoFullName}.svg?style=flat-square\"></a>\n" +
+            "<a title=\"Hits\" target=\"_blank\" href=\"https://github.com/${username}/hits\">" +
+            "<img src=\"https://hits.b3log.org/${repoFullName}.svg\"></a>" +
+            "</p>\n" +
+            "\n" +
+            "${body}\n\n" +
+            "\n";
         ret = ret.replace("${title}", blogConfigure.getClientTitle()).
-                replace("${subtitle}", blogConfigure.getClientSubtitle()).
-                replace("${favicon}", blogConfigure.getFavicon()).
-                replace("${repoFullName}", repoFullName).
-                replace("${body}", bodyBuilder.toString());
+            replace("${subtitle}", blogConfigure.getClientSubtitle()).
+            replace("${favicon}", blogConfigure.getFavicon()).
+            replace("${repoFullName}", repoFullName).
+            replace("${body}", bodyBuilder.toString()).
+            replace("${username}", blogConfigure.getRepoName()).
+            replace("${home}", blogConfigure.getHome());
         return ret;
     }
 

@@ -14,7 +14,7 @@ public class BlogUpdateTest {
 
     @Test
     public void updateGitHub(){
-        String configPath = "/home/zeek/project/github_zeekling/src/main/resources/blog.properties";
+        String configPath = "/home/zeekling/project/ling/github_zeekling/src/main/resources/blog.properties";
         BlogUpdateService updateService = new BlogUpdateServiceImpl(configPath);
         int res  = updateService.update();
         if (res == 0){
