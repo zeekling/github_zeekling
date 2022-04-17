@@ -2,6 +2,7 @@ package com.zeekling.util;
 
 import com.zeekling.blog.BlogUpdateService;
 import com.zeekling.blog.BlogUpdateServiceImpl;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.annotations.Test;
@@ -15,7 +16,7 @@ import org.testng.annotations.Test;
 public class GitHubsTest {
 
   @Test
-  public void getAll() {
+  public void genGitHubInfo() {
     String configPath = "/home/zeekling/project/ling/github_zeekling/src/main/resources/blog.properties";
     BlogUpdateService updateService = new BlogUpdateServiceImpl(configPath);
     JSONArray result = updateService.getGitHubRepos();
@@ -45,6 +46,32 @@ public class GitHubsTest {
       compatibleResult.put(compatibleObject);
     }
     System.out.println(compatibleResult);
+
+    final StringBuilder contentBuilder = new StringBuilder();
+    String stats = "\n![Github Stats](https://github-readme-stats.vercel.app/api?username={username}&show_icons=true) \n\n";
+    stats = stats.replace("{username}", "zeekling");
+    contentBuilder.append("![GitHub Repo](/images/github_repo.jpg)\n\n");
+    contentBuilder.append("## Github Stats\n").append(stats);
+    contentBuilder.append("## 所有开源项目\n");
+    contentBuilder.append("| 仓库 |  项目简介 | 收藏数 | fork数 | 项目主页 | 主要编程语言 |\n | ---- | ---- | ---- | ---- | ---- | ---- |\n");
+    for (int i = 0; i < compatibleResult.length(); i++) {
+      final JSONObject repo = compatibleResult.optJSONObject(i);
+      final String url = repo.optString("githubrepoHTMLURL");
+      final String desc = repo.optString("githubrepoDescription");
+      final String name = repo.optString("githubrepoName");
+      final String stars = repo.optString("githubrepoStargazersCount");
+      final String forks = repo.optString("githubrepoForksCount");
+      final String lang = repo.optString("githubrepoLanguage");
+      final String hp = repo.optString("githubrepoHomepage");
+      contentBuilder.append("| [").append(name).append("](").append(url).append(") | ")
+          .append(desc).append(" | ")
+          .append(stars).append(" | ")
+          .append(forks).append(" | ")
+          .append(hp).append(" | ")
+          .append(lang).append("|\n");
+    }
+
+    FileUtils.saveDataToFile("/tmp/GITHUB.md", contentBuilder.toString());
   }
 
 }
