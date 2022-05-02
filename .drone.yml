@@ -17,3 +17,8 @@ trigger:
   event:
     - pull_request
     - push
+
+volumes:
+  - name: cache
+    host:
+      path: /root/.m2
