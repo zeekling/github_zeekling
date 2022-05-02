@@ -11,3 +11,9 @@ steps:
   commands:
     - mvn clean install -DskipTests
 
+trigger:
+  branch:
+    - master
+  event:
+    - pull_request
+    - push
