@@ -3,8 +3,15 @@ type: docker
 name: default
 
 steps:
-- name: install
-  image: alpine
+- name: build
+  image: maven
+  volumes:
+    - name: cache
+      path: /root/.m2
   commands:
-  - mvn install
+    - mvn clean install -DskipTests
 
+volumes:
+  - name: cache # The name use in this pipeline,
+    host:
+      path: /var/lib/cache # The path be used in the host.
