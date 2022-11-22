@@ -95,7 +95,7 @@ public class BlogUpdateServiceImpl implements BlogUpdateService {
         bodyBuilder.append("\n\n");
 
         String ret = "### Hey \uD83D\uDC4B, I'm [${title}](${home})! \n" +
-            "\n![Github Stats](https://github-readme-stats.vercel.app/api?username=${username}&show_icons=true) \n\n" +
+            "\n![Github Stats](https://github-readme-stats-zeekling.vercel.app/api?username=${username}&show_icons=true) \n\n" +
             "### 我在博客[${title}](${home})的近期动态\n" +
             "⭐️ Star [个人主页](https://github.com/${username}) 后会自动更新" +
             "\n\n<p align=\"center\"><img alt=\"${title}\" src=\"${favicon}\"></p>" +
